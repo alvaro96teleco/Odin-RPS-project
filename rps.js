@@ -17,21 +17,11 @@ function getComputerChoice(){
     return decision;
 }
 
-function getHumanChoice(){
-    let decision = "";
-    decision = prompt("Please, make your choce: ");
+function playRound(event){
 
-    if (decision == null){
-        decision = "error, no human input";
-    } else if (decision == "Rock" || decision == "Paper" || decision == "Scissors"){
-        return decision;
-    }else {
-        console.log("Error getting human choice");
-    }
-    return decision;
-}
+    const computerChoice = getComputerChoice();
+    const humanChoice = event.currentTarget.textContent.trim();
 
-function playRound(humanChoice, computerChoice){
     let result = null;
     let WIN = "You win! " + humanChoice + " beats " + computerChoice; 
     let LOSS = "You lose! " + computerChoice + " beats " + humanChoice; 
@@ -70,31 +60,26 @@ function playRound(humanChoice, computerChoice){
     } else {
         result = "Error in the score";
     }
-    return result;
-}
+    
+    if (result != "Error in the score"){
+        rounds++;
+    }
 
-function playGame(){
-    let humanSelection = getHumanChoice();
-    let computerSelection = getComputerChoice();
-    console.log(playRound(humanSelection, computerSelection));
+    const scoreContainer = document.querySelector(".score-container");
+    const resultDiv = document.createElement("div");
 
-    humanSelection = getHumanChoice();
-    computerSelection = getComputerChoice();
-    console.log(playRound(humanSelection, computerSelection));
+    resultDiv.textContent = "Round " + rounds + ": " + result;
+    scoreContainer.appendChild(resultDiv);
 
-    humanSelection = getHumanChoice();
-    computerSelection = getComputerChoice();
-    console.log(playRound(humanSelection, computerSelection));
+    if (rounds >= 5){
+        const finalScoreDiv = document.createElement("div");
+        finalScoreDiv.textContent = "\nFinal score: Your score = " + humanScore + " Bot score = " + computerScore;
+        scoreContainer.appendChild(finalScoreDiv);
 
-    humanSelection = getHumanChoice();
-    computerSelection = getComputerChoice();
-    console.log(playRound(humanSelection, computerSelection));
-
-    humanSelection = getHumanChoice();
-    computerSelection = getComputerChoice();
-    console.log(playRound(humanSelection, computerSelection));
-
-    console.log("Final results! human: " + humanScore + " and bot: " + computerScore);
+        rockButton.removeEventListener("click", playRound);
+        paperButton.removeEventListener("click", playRound);
+        scissorsButton.removeEventListener("click", playRound);
+    }
 
 }
 
@@ -105,8 +90,26 @@ function getRandomInt(max){
 
 let humanScore = 0;
 let computerScore = 0;
+let rounds = 0;
 
-playGame();
+const buttonsContainer = document.querySelector(".buttons-container");
+
+const rockButton = document.createElement("button");
+const paperButton = document.createElement("button");
+const scissorsButton = document.createElement("button");
+
+rockButton.textContent = "Rock";
+paperButton.textContent = "Paper";
+scissorsButton.textContent = "Scissors";
+
+rockButton.addEventListener("click", playRound);
+paperButton.addEventListener("click", playRound);
+scissorsButton.addEventListener("click", playRound);
+
+buttonsContainer.appendChild(rockButton);
+buttonsContainer.appendChild(paperButton);
+buttonsContainer.appendChild(scissorsButton);
+
 
 
 
